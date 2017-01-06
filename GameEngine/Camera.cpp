@@ -1,24 +1,25 @@
 
 #include "Camera.h"
+#include "Frustum.h"
 
 Camera::Camera()
 {
 }
 
-Camera::Camera(CameraType _type, float _width, float _height, GLuint _program)
+Camera::Camera(CameraType _type, float _width, float _height)
 {
 	type = _type;
 	width = _width;
 	height = _height;
-	SetProgram(_program);
+	frustum = new Frustum();
 }
 
 void Camera::SetProgram(GLuint _program)
 {
 	program = _program;
-	modelHandle = glGetUniformLocation(_program, "model"); // Assign modelHandle to uniform value model in shader program
-	viewHandle = glGetUniformLocation(_program, "view");
-	projHandle = glGetUniformLocation(_program, "projection");
+	modelHandle = glGetUniformLocation(program, "model"); // Assign modelHandle to uniform value model in shader program
+	viewHandle = glGetUniformLocation(program, "view");
+	projHandle = glGetUniformLocation(program, "projection");
 }
 
 void Camera::SetPositionVector(float _x, float _y, float _z)
@@ -50,6 +51,18 @@ void Camera::Render() {
 	else if (type == CameraType::ORTHO)
 		projection = glm::ortho(0.0f, width, 0.0f, height,  nearClipPlane, farClipPlane);
 }
+
+void Camera::ResizeFrustum(float _ratio, float _near, float _far)
+{
+	frustum->windowResized(fov, _ratio, _near, _far);
+	frustum->cameraChanged(positionVector, targetVector, upVector);
+}
+
+bool Camera::IsInsideFrustum(glm::vec3 & cent, float radius)
+{
+	return frustum->isInside(cent, radius) == Frustum::INSIDE;
+}
+
 
 Camera::~Camera()
 {

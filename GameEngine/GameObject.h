@@ -2,60 +2,46 @@
 #include "SDL.h"
 #include "BoundingSphere.h"
 #include "BoundingBox.h"
-#include "SimpleModel.h"
+#include "Model.h"
+#include "SceneNode.h"
 
 class GameObject
 {
 private:
-	SimpleModel *model;
-	BoundingSphere sphere;	
-	BoundingBox box;
-	glm::mat4 transform;
-	glm::vec3 velocity;
+	//connection to sceneGraph
+	//scenenode contains the transform matrix for the world position
+	SceneNode   *sceneNode;
+	//model passed in for now, this should be a component **MESH**
+	Model *model;
+
+	//World transform variables
+	glm::vec3 position;
 	glm::vec3 rotation;
-	glm::vec3* position;
-	glm::vec3 initialVelocity;
-	glm::vec3 accel;
-	glm::vec3 newPos;
-	glm::vec3 force;
-	float mass;
-	float angle;
-	OpenGLRenderer* renderer;
+	glm::vec3 scale;
+
 public:
 
 	GameObject();
-	void OnInput(Uint32 event, SDL_Keycode key);
-	void Update(double deltaTime);
-	void Render();
-	glm::mat4 GetTransform();
-	glm::vec3 GetInitialVelocity();
-
-	void SetInitialVelocity(glm::vec3 _velocity);
-	glm::vec3 GetAcceleration();
-	void SetAcceleration(glm::vec3 _accel);
-	glm::vec3 GetRotation();
-	void SetRotation(glm::vec3 _rotation);
-	glm::vec3* GetPosition();
-	void SetPosition(glm::vec3 &_position);
-	void UpdatePosition();
-	void UpdateRotation();
-	void clearForces();
-	void clearForces_X();
-	void clearForces_Y();
-	void clearForces_Z();
-	void updateWorldPosition();
-	float GetAngle();
-
-	SimpleModel GetModel();
-
-	void AddForce(glm::vec3 _forceVec);
-	void SetAngle(float _angle);
-
-	BoundingSphere GetSphere();
-	BoundingBox GetBoundingBox();
-
-	GameObject(SimpleModel *_model, BoundingSphere _sphere, OpenGLRenderer &_rend);
-	GameObject(SimpleModel *_model, BoundingBox _box, OpenGLRenderer &_rend);
+	GameObject(Model &_model);
 	~GameObject();
+
+	void Update(float deltaTime);
+	
+	//place object in SceneGraph
+	void AttachToScene(SceneNode *_sceneNode) { _sceneNode->AppendChild(sceneNode); }
+
+	//*********SETTERS***********//
+	void SetPosition(const glm::vec3 &_position) { position = _position; sceneNode->TranslateTransform(position); }
+	void SetRotation(const glm::vec3 &_rotation) { rotation = _rotation; sceneNode->RotateTransform(rotation); }
+	void SetScale	(const glm::vec3 &_scale)	 { scale = _scale;		 sceneNode->ScaleTransform(scale); }
+
+	//*********GETTERS**********//
+	SceneNode* GetSceneNode() { return sceneNode; }
+
+	glm::vec3  GetPosition() { return position; }
+	glm::vec3  GetRotation() { return rotation; }
+	glm::vec3  GetScale()	 { return scale; }
+
+
 };
 

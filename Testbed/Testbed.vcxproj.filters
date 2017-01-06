@@ -21,9 +21,15 @@
     <ClCompile Include="TestApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,6 +53,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="lightShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="newshader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="newshader.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
